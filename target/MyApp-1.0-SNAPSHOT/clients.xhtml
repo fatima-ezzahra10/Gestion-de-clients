@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+    <ui:composition template="/WEB-INF/templates/template.xhtml">
+        <ui:define name="title">Gestion des Clients</ui:define>
+
+        <ui:define name="content">
+            <!-- Growl pour les messages -->
+            <p:growl id="messages" showDetail="true" />
+
+            <!-- Formulaire principal pour la gestion des clients -->
+            <h:form id="clientForm">
+                <p:panel header="Ajout / Modification Client">
+                    <p:panelGrid columns="4">
+                        <h:outputLabel for="nom" value="Nom :" />
+                        <p:inputText id="nom" value="#{clientBean.client.nom}" required="true" requiredMessage="Vous devez indiquer une valeur."
+                                     />
+
+                        <h:outputLabel for="idClient" value="Id :" />
+                        <p:inputText id="idClient" value="#{clientBean.client.id}" readonly="true" />
+
+                        <h:outputLabel for="prenom" value="Prénom :" />
+                        <p:inputText id="prenom" value="#{clientBean.client.prenom}" required="true" requiredMessage="Vous devez indiquer une valeur."
+                                     />
+
+                        <h:outputLabel for="date" value="Date de naissance :" />
+                        <p:datePicker id="date" value="#{clientBean.client.dateNaissance}" pattern="dd/MM/yyyy" 
+                                      />
+
+                        <h:outputLabel for="categorie" value="Catégorie :" />
+                        <p:selectOneMenu id="categorie" value="#{clientBean.client.categorie}" 
+                                         >
+                            <f:selectItem itemLabel="Sélectionner" itemValue="" />
+                            <f:selectItem itemLabel="Standard" itemValue="Standard" />
+                            <f:selectItem itemLabel="Premium" itemValue="Premium" />
+                            <f:selectItem itemLabel="VIP" itemValue="VIP" />
+                        </p:selectOneMenu>
+
+                        <h:outputLabel for="email" value="Email :" />
+                        <p:inputText id="email" value="#{clientBean.client.email}" required="true" requiredMessage="Vous devez indiquer une valeur."
+                                     >
+                            <f:validator validatorId="emailValidator" />
+                        </p:inputText>             
+
+                        <h:outputLabel for="telephone" value="Numéro de téléphone :" />
+                        <p:inputText id="telephone" value="#{clientBean.client.telephone}" required="true" requiredMessage="Vous devez indiquer une valeur."
+                                     >
+                            <f:validator validatorId="phoneValidator" />
+                        </p:inputText> 
+
+                        <h:outputLabel for="newsletter" value="Inscription à la newsletter :" />
+                        <p:selectBooleanCheckbox id="newsletter" value="#{clientBean.client.newsletter}"
+                                                 />
+
+                        <h:outputLabel value="Préférence de rayon :" />
+                        <p:selectOneRadio id="rayon" value="#{clientBean.client.rayon}"
+                                          >
+                            <f:selectItem itemLabel="Rayon 1" itemValue="Rayon 1" />
+                            <f:selectItem itemLabel="Rayon 2" itemValue="Rayon 2" />
+                            <f:selectItem itemLabel="Rayon 3" itemValue="Rayon 3" />
+                        </p:selectOneRadio>
+                    </p:panelGrid>
+
+                    <p:commandButton value="Enregistrer" action="#{clientBean.ajouterClient}" process="@form"
+                                     update="clientForm :listeForm:clientsTable :messages" style="margin-top:10px;"
+                                     disabled="#{clientBean.clientSelectionne and not clientBean.modeEdition}"/>
+
+                    <p:commandButton value="Annuler" action="#{clientBean.annulerModification}" 
+                                     update=":messages :listeForm:clientsTable @form" process="@this" 
+                                     immediate="true" style="margin-top:10px; margin-left:5px;" />
+                </p:panel>
+            </h:form>
+
+            <p:separator />
+
+            <!-- Formulaire de recherche - NOUVELLE SECTION -->
+            <h:form id="searchForm">
+                <p:panel>
+                    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px;">
+                        <p:inputText id="searchQuery" value="#{clientBean.searchQuery}" 
+                                     placeholder="Rechercher..." style="width: 150px;" />
+                        <p:commandButton icon="pi pi-search" action="#{clientBean.searchClients}"
+                                         update=":listeForm:clientsTable :messages"
+                                         styleClass="ui-button-primary" style="border-radius: 25% 10%;" />
+                    </div>
+                </p:panel>
+            </h:form>
+
+            <!-- Formulaire pour la liste des clients -->
+            <h:form id="listeForm">
+                <p:panel header="Liste des Clients">
+                    <p:dataTable id="clientsTable" value="#{clientBean.filteredClients}" var="c" 
+                                 rows="5" paginator="true" 
+                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}" 
+                                 paginatorPosition="bottom"
+                                 selectionMode="single" selection="#{clientBean.selectedClient}"
+                                 rowKey="#{c.id}" emptyMessage="Aucun client trouvé">
+
+                        <p:ajax event="rowSelect" listener="#{clientBean.onRowSelect}" 
+                                update=":clientForm :messages" />
+
+                        <p:column headerText="ID">#{c.id}</p:column>
+                        <p:column headerText="Nom">#{c.nom}</p:column>
+                        <p:column headerText="Prénom">#{c.prenom}</p:column>
+                        <p:column headerText="Date de Naissance">#{c.dateNaissance}</p:column>
+                        <p:column headerText="Catégorie">#{c.categorie}</p:column>
+                        <p:column headerText="Email">#{c.email}</p:column>
+                        <p:column headerText="Téléphone">#{c.telephone}</p:column>
+                        <p:column headerText="Inscription Newsletter">#{c.newsletter ? 'Oui' : 'Non'}</p:column>
+                        <p:column headerText="Préférence de Rayon">#{c.rayon}</p:column>
+                        <p:column headerText="Actions">
+                            <p:commandButton icon="pi pi-pencil"
+                                             action="#{clientBean.preparerModification(c)}"
+                                             update=":clientForm"
+                                             process="@this"
+                                             immediate="true"
+                                             title="Modifier"
+                                             styleClass="rounded-button ui-button-sm ui-button-info"
+                                             style="margin-right:5px;" />
+
+                            <p:commandButton icon="pi pi-trash"
+                                             action="#{clientBean.supprimerClient(c)}"
+                                             update=":listeForm:clientsTable :messages"
+                                             process="@this"
+                                             styleClass="rounded-button ui-button-sm ui-button-danger"
+                                             title="Supprimer"
+                                             style="margin-right:5px;">
+                                <p:confirm header="Confirmation"
+                                           message="Êtes-vous sûr de vouloir supprimer ce client ?"
+                                           icon="pi pi-exclamation-triangle" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <!-- Formulaire pour le dialog de confirmation -->
+            <h:form id="confirmForm">
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                    <p:commandButton value="Non" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" />
+                    <p:commandButton value="Oui" type="button" styleClass="ui-confirmdialog-yes" />
+                </p:confirmDialog>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

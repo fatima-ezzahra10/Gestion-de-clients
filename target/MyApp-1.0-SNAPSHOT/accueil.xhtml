@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="/WEB-INF/templates/template.xhtml">
+    <ui:define name="title">Accueil - Gestion des Clients</ui:define>
+    
+    <ui:define name="content">
+        <p:panel header="Bienvenue dans l'application de gestion des clients">
+            <h3>Fonctionnalités disponibles</h3>
+            <ul>
+                <li>Gestion complète des clients (CRUD)</li>
+                <li>Catégorisation des clients</li>
+            </ul>
+            
+            <p:button value="Gérer les clients" outcome="clients" icon="pi pi-users" />
+        </p:panel>
+    </ui:define>
+</ui:composition>
+</html>

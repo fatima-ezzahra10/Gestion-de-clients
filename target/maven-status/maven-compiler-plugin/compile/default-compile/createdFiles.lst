@@ -1,0 +1,8 @@
+com\mycompany\myapp\model\Client.class
+com\mycompany\myapp\dao\ClientDAO.class
+com\mycompany\myapp\JakartaRestConfiguration.class
+com\mycompany\myapp\bean\ClientBean.class
+com\mycompany\myapp\bean\SearchBean.class
+com\mycompany\myapp\resources\JakartaEE10Resource.class
+com\mycompany\myapp\bean\PhoneValidator.class
+com\mycompany\myapp\bean\EmailValidator.class

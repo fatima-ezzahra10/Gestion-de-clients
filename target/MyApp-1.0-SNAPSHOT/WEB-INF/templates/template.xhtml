@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="jakarta.faces.facelets">
+    <h:head>
+        <title><ui:insert name="title"></ui:insert></title>
+        <h:outputStylesheet library="webjars" name="primeflex/3.3.1/primeflex.min.css" />
+        <!-- Style intégré -->
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 0;
+            }
+            .ui-menubar {
+                background-color: #007ad9;
+                color: white;
+                padding: 10px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .ui-menubar a {
+                color: white !important;
+            }
+            .ui-button-flat {
+                background: none !important;
+                border: none !important;
+                color: white !important;
+                cursor: pointer;
+            }
+            .ui-sidebar {
+                background: #333;
+                color: white;
+                padding: 10px;
+            }
+            .content-container {
+                margin: 20px;
+                padding: 20px;
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            .header-logo {
+                height: 60px;
+                width: 100px;
+            }
+            .search-bar {
+                display: flex;
+                gap: 10px;
+                justify-content: flex-end;
+                align-items: center;
+                width: 100%;
+            }
+            .header-bar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+                padding: 8px 16px;
+                background-color: #ffffff;
+                border-bottom: 1px solid #ddd;
+            }
+            .logo-container {
+                display: flex;
+                align-items: center;
+            }
+            .header-right {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+            }
+            .search-input {
+                width: 250px;
+            }
+            .search-button{
+                width: 42px;
+                height: 37px;
+                border-radius: 25% 10%;
+
+            }
+        </style>
+        <ui:insert name="head" />
+    </h:head>
+    <h:body>
+        <pe:layout maskPanesEarly="true">
+            <!-- Header -->
+            <pe:layoutPane position="north" closable="false" resizable="false" slidable="false">
+                <div class="header-bar">
+                    <div class="logo-container">
+                        <h:graphicImage library="images" name="vecteezy_golden-logo-.png"
+                                        alt="Mon logo"
+                                        styleClass="header-logo" />
+                    </div>
+                    <div class="header-right">
+                        <h:form>
+                            <div class="search-bar">
+                                <p:inputText id="searchBar" value="#{searchBean.query}" 
+                                             placeholder="Rechercher..." styleClass="search-input" />
+                                <p:commandButton value="" action="#{searchBean.search}" 
+                                                 icon="pi pi-search" 
+                                                 styleClass="search-button" />
+                            </div>
+                        </h:form>
+                    </div>
+                </div>
+            </pe:layoutPane>
+
+            <!-- Zone centrale -->
+            <pe:layoutPane position="center" maskContents="true">
+                <ui:insert name="content">
+                    <!-- Le contenu sera inséré ici -->
+                </ui:insert>
+            </pe:layoutPane>
+
+            <!-- Sidebar -->
+            <pe:layoutPane position="west" size="200" resizeWhileDragging="false"
+                           maxSize="500" minSize="100" resizable="true" closable="true">
+                <h:form>
+                    <p:menu styleClass="ui-sidebar">
+                        <p:submenu label="Menu">
+                            <p:menuitem value="Accueil" outcome="/index" icon="pi pi-home"/>
+                            <p:menuitem value="Clients" outcome="/clients" icon="pi pi-users"/>
+                        </p:submenu>
+                    </p:menu>
+                </h:form>
+            </pe:layoutPane>
+
+            <!-- Footer -->
+            <pe:layoutPane position="south" size="31" closable="false" resizable="false" slidable="false">
+                <div style="text-align: center; padding: 6px; background-color: #eeeeee; color: #555; font-size: 0.9em;">
+                    Copyright © 2025 Mon Application – Tous droits réservés
+                </div>
+            </pe:layoutPane>
+        </pe:layout>
+
+    </h:body>
+</html>
